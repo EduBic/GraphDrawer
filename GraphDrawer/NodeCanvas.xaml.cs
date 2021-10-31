@@ -27,7 +27,10 @@ namespace GraphDrawer
         private const double DIST_FROM_ELLIPSE_INP = 10.0;
         private const double DIST_FROM_ELLIPSE_OUT = 12.0;
 
-        private readonly Ellipse circle;
+        public Ellipse Circle { get; }
+
+        public List<Ellipse> InpHooks { get; }
+        public List<Ellipse> OutHooks { get; }
 
 
         public NodeCanvas(Point center, List<ConnectionViewModel> connections)
@@ -43,7 +46,7 @@ namespace GraphDrawer
 
 
             // draw main circle
-            circle = new Ellipse()
+            Circle = new Ellipse()
             {
                 Width = CIRCLE_RADIUS * 2,
                 Height = CIRCLE_RADIUS * 2,
@@ -52,24 +55,25 @@ namespace GraphDrawer
                 Fill = Brushes.Silver
             };
 
-            SetLeft(circle, -CIRCLE_RADIUS);
-            SetTop(circle, -CIRCLE_RADIUS);
+            SetLeft(Circle, -CIRCLE_RADIUS);
+            SetTop(Circle, -CIRCLE_RADIUS);
 
-            Children.Add(circle);
+            Children.Add(Circle);
 
             // draw connection hooks
             var inputs = connections.Select(conn => (conn.NumInput, conn.Type)).ToList();
             var inputsCount = connections.Select(conn => conn.NumInput).Sum();
-            DrawHooks(inputs, inputsCount, -1);
+            InpHooks = DrawHooks(inputs, inputsCount, -1);
 
             var outputs = connections.Select(conn => (conn.NumOutput, conn.Type)).ToList();
             var outputsCount = connections.Select(conn => conn.NumOutput).Sum();
-            DrawHooks(outputs, outputsCount, 1);
+            OutHooks = DrawHooks(outputs, outputsCount, 1);
         }
 
         // direction = 1 => RIGHT, -1 => LEFT
-        private void DrawHooks(List<(int, string)> hookTuples, int count, int direction)
+        private List<Ellipse> DrawHooks(List<(int, string)> hookTuples, int count, int direction)
         {
+            var res = new List<Ellipse>();
             var distanceBtwHooks = CIRCLE_RADIUS * 2 / (1 + count);
             int counter = 1;
             foreach (var (num, type) in hookTuples)
@@ -79,10 +83,13 @@ namespace GraphDrawer
                 for (int k = 0; k < num; k++)
                 {
                     var yHookCoord = distanceBtwHooks * counter - CIRCLE_RADIUS;
-                    DrawHook(new Point(xHookCoord, yHookCoord), direction);
+                    var hook = DrawHook(new Point(xHookCoord, yHookCoord), direction);
+                    res.Add(hook);
                     counter++;
                 }
             }
+
+            return res;
         }
 
         // direction = 1 => RIGHT, -1 => LEFT
@@ -124,12 +131,12 @@ namespace GraphDrawer
 
         internal void Deselect()
         {
-            circle.Stroke = Brushes.Black;
+            Circle.Stroke = Brushes.Black;
         }
 
         internal void Selected()
         {
-            circle.Stroke = Brushes.Goldenrod;
+            Circle.Stroke = Brushes.Goldenrod;
         }
     }
 }

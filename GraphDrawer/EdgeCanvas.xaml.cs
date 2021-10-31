@@ -20,24 +20,23 @@ namespace GraphDrawer
     /// </summary>
     public partial class EdgeCanvas : Canvas
     {
-        private const double LINE_LEN = 10;
         private readonly Line line;
 
-        public EdgeCanvas(Point center)
+        public EdgeCanvas(Point from, Point to)
         {
             InitializeComponent();
 
-            SetLeft(this, center.X);
-            SetTop(this, center.Y);
+            SetLeft(this, from.X);
+            SetTop(this, from.Y);
 
             line = new Line()
             {
-                X1 = -LINE_LEN / 2,
+                X1 = 0,
                 Y1 = 0,
-                X2 = LINE_LEN / 2,
-                Y2 = 0,
+                X2 = to.X - from.X,
+                Y2 = to.Y - from.Y,
                 Stroke = Brushes.Black,
-                StrokeThickness = 1.5,
+                StrokeThickness = 2,
             };
 
             _ = Children.Add(line);

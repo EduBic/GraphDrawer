@@ -1,0 +1,35 @@
+﻿<Window x:Class="GraphDrawer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GraphDrawer"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}"
+        >
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10*" />
+            <ColumnDefinition Width="90*" />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel x:Name="ToolPanel"
+                    Grid.Row="0" Grid.Column="0"
+                    Margin="10, 10, 10, 10">
+            <RadioButton GroupName="DrawerState" IsChecked="{Binding Put}" Click="RadioButton_Click">Put</RadioButton>
+            <RadioButton GroupName="DrawerState" IsChecked="{Binding Connect}" Click="RadioButton_Click">Connect</RadioButton>
+            <RadioButton GroupName="DrawerState" IsChecked="{Binding Free}" Click="RadioButton_Click">Free</RadioButton>
+        </StackPanel>
+
+        <Canvas x:Name="MainCanvas" 
+                Grid.Row="0" Grid.Column="1"
+                Background="Gainsboro">
+            
+        </Canvas>
+        
+    </Grid>
+</Window>

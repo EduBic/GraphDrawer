@@ -53,8 +53,10 @@ namespace GraphDrawer
                 Canvas_MouseUp(mainCanvas, e);
             }
 
-            Canvas.SetLeft(SelectedElement, p.X);
-            Canvas.SetTop(SelectedElement, p.Y);
+            (SelectedElement.DataContext as NodeViewModel).ChangePosition(p);
+
+            //Canvas.SetLeft(SelectedElement, p.X);
+            //Canvas.SetTop(SelectedElement, p.Y);
         }
 
         private void Canvas_MouseUp(object sender, MouseEventArgs e)

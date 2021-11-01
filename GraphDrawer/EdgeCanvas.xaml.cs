@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,6 +31,9 @@ namespace GraphDrawer
             SetLeft(this, vm.Start.AbsX);
             SetTop(this, vm.Start.AbsY);
 
+            SetBinding(LeftProperty, new Binding(nameof(vm.Start.AbsX)) { Source = vm.Start });
+            SetBinding(TopProperty, new Binding(nameof(vm.Start.AbsY)) { Source = vm.Start });
+
             line = new Line()
             {
                 X1 = 0,
@@ -40,7 +44,41 @@ namespace GraphDrawer
                 StrokeThickness = 2,
             };
 
+            // Binding with conversion
+            vm.Start.PropertyChanged += UpdateHeadEdgeFromStart;
+            vm.End.PropertyChanged += UpdateHeadEdge;
+
             _ = Children.Add(line);
+        }
+
+        private void UpdateHeadEdgeFromStart(object s, PropertyChangedEventArgs e)
+        {
+            var edgeVm = DataContext as EdgeViewModel;
+            var hookVm = s as HookViewModel;
+
+            if (e.PropertyName == nameof(hookVm.AbsX))
+            {
+                line.X2 = edgeVm.End.AbsX - hookVm.AbsX;
+            }
+            else if (e.PropertyName == nameof(hookVm.AbsY))
+            {
+                line.Y2 = edgeVm.End.AbsY - hookVm.AbsY;
+            }
+        }
+
+        private void UpdateHeadEdge(object s, PropertyChangedEventArgs e)
+        {
+            var edgeVm = DataContext as EdgeViewModel;
+            var hookVm = s as HookViewModel;
+
+            if (e.PropertyName == nameof(hookVm.AbsX))
+            {
+                line.X2 = hookVm.AbsX - edgeVm.Start.AbsX;
+            }
+            else if (e.PropertyName == nameof(hookVm.AbsY))
+            {
+                line.Y2 = hookVm.AbsY - edgeVm.Start.AbsY;
+            }
         }
     }
 }

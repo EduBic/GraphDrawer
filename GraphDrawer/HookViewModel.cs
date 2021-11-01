@@ -9,11 +9,23 @@ namespace GraphDrawer
 {
     public class HookViewModel : BaseViewModel
     {
-        public double X { get; set; }
-        public double Y { get; set; }
+        private double absX;
+        private double absY;
 
-        public double AbsX { get; set; }
-        public double AbsY { get; set; }
+        // TODO: these change when we need to move the hook in the reference system of node canvas
+        public double X { get; init; }
+        public double Y { get; init; }
+
+        public double AbsX
+        {
+            get { return absX; }
+            set { SetProperty(ref absX, value); }
+        }
+        public double AbsY
+        {
+            get { return absY; }
+            set { SetProperty(ref absY, value); }
+        }
 
         // input = -1, output = 1
         public int Direction { get; set; }
@@ -28,6 +40,12 @@ namespace GraphDrawer
             Direction = direction;
             AbsX = x + origin.X;
             AbsY = y + origin.Y;
+        }
+
+        internal void Translate(double translateX, double translateY)
+        {
+            AbsX -= translateX;
+            AbsY -= translateY;
         }
     }
 }

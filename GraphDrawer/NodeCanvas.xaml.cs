@@ -38,8 +38,11 @@ namespace GraphDrawer
             DataContext = vm;
 
             // set global coordinates
-            SetLeft(this, vm.Origin.X);
-            SetTop(this, vm.Origin.Y);
+            //SetLeft(this, vm.X);
+            //SetTop(this, vm.Y);
+
+            _ = SetBinding(LeftProperty, new Binding(nameof(vm.X)) { Source = vm });
+            _ = SetBinding(TopProperty, new Binding(nameof(vm.Y)) { Source = vm });
 
             this.Width = CIRCLE_RADIUS * 4;
             this.Height = CIRCLE_RADIUS * 4;

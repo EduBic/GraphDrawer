@@ -10,12 +10,26 @@ namespace GraphDrawer
 {
     public class NodeViewModel : BaseViewModel
     {
-        public Point Origin { get; init; }
+        private double x;
+        private double y;
+
+        public double X 
+        { 
+            get { return x; }
+            set { SetProperty(ref x, value); }
+        }
+        public double Y
+        {
+            get { return y; }
+            set { SetProperty(ref y, value); }
+        }
+
         public List<ConnectionViewModel> Connections { get; }
 
         public NodeViewModel(Point origin, List<ConnectionConfigViewModel> connectionConfigs)
         {
-            Origin = origin;
+            X = origin.X;
+            Y = origin.Y;
 
             Connections = new List<ConnectionViewModel>(connectionConfigs.Count);
             
@@ -47,6 +61,23 @@ namespace GraphDrawer
 
                 var newConn = new ConnectionViewModel(inHooks, outHooks);
                 Connections.Add(newConn);
+            }
+        }
+
+        public void ChangePosition(Point newOrigin)
+        {
+            var translateX = X - newOrigin.X;
+            var translateY = Y - newOrigin.Y;
+
+            X = newOrigin.X;
+            Y = newOrigin.Y;
+
+            foreach (var conn in Connections)
+            {
+                foreach (var hook in conn.Inputs.Concat(conn.Outputs))
+                {
+                    hook.Translate(translateX, translateY);
+                }
             }
         }
     }

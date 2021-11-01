@@ -14,7 +14,7 @@ namespace GraphDrawer
         private readonly Canvas mainCanvas;
 
         // internal state
-        private Point start;
+        private HookViewModel start;
 
         public ConnectCanvasState(Canvas mainCanvas)
         {
@@ -51,7 +51,8 @@ namespace GraphDrawer
         private void OutHook_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
             // save internal state
-            start = e.GetPosition(mainCanvas);
+            var hook = sender as Ellipse;
+            start = hook.DataContext as HookViewModel;
 
             DetachOutputHooks();
             AttachInputHooks();
@@ -90,7 +91,8 @@ namespace GraphDrawer
 
         private void InpHook_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            var end = e.GetPosition(mainCanvas);
+            var inHook = sender as Ellipse;
+            var end = inHook.DataContext as HookViewModel;
 
             var edgeVm = new EdgeViewModel(start, end);
             var edge = new EdgeCanvas(edgeVm);

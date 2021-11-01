@@ -4,9 +4,9 @@ namespace GraphDrawer
 {
     public class ConnectionConfigViewModel : BaseViewModel
     {
-        private int numInput;
-        private int numOutput;
-        private string type;
+        private int numInput = 1;
+        private int numOutput = 1;
+        private string type = "Water";
 
         public int NumInput 
         { 
@@ -28,8 +28,8 @@ namespace GraphDrawer
 
         public void Reset()
         {
-            NumInput = 0;
-            NumOutput = 0;
+            NumInput = 1;
+            NumOutput = 1;
             Type = "Water";
         }
 

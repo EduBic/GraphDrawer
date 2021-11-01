@@ -83,36 +83,25 @@ namespace GraphDrawer
         // direction = 1 => RIGHT, -1 => LEFT
         private static List<(Line, Ellipse)> DrawHooks(List<HookViewModel> hooks, int direction)
         {
-            var res = new List<(Line, Ellipse)>();
-            var distanceBtwHooks = CIRCLE_RADIUS * 2 / (1 + hooks.Count);
-            int counter = 1;
-            foreach (var hookVm in hooks)
-            {
-                var xHookCoord = direction * (CIRCLE_RADIUS + DIST_FROM_ELLIPSE_OUT);
-
-                var yHookCoord = distanceBtwHooks * counter - CIRCLE_RADIUS;
-                var hook = DrawHook(new Point(xHookCoord, yHookCoord), direction);
-                res.Add(hook);
-                counter++;
-            }
-
-            return res;
+            return hooks
+                .Select(DrawHook)
+                .ToList();
         }
 
         // direction = 1 => RIGHT, -1 => LEFT
-        private static (Line, Ellipse) DrawHook(Point linePointExternal, int direction)
+        private static (Line, Ellipse) DrawHook(HookViewModel vm)
         {
             var origin = new Point(0, 0);
             var linePointToEllipse = new Point(
-                origin.X + direction * Math.Sqrt(Math.Pow(CIRCLE_RADIUS, 2.0) - Math.Pow(linePointExternal.Y - origin.Y, 2.0)),
-                linePointExternal.Y);
+                origin.X + vm.Direction * Math.Sqrt(Math.Pow(CIRCLE_RADIUS, 2.0) - Math.Pow(vm.Y - origin.Y, 2.0)),
+                vm.Y);
 
             var line = new Line()
             {
                 Stroke = Brushes.Black,
                 StrokeThickness = 1,
-                X1 = linePointExternal.X - direction * HOOK_RADIUS,
-                Y1 = linePointExternal.Y,
+                X1 = vm.X - vm.Direction * HOOK_RADIUS,
+                Y1 = vm.Y,
                 X2 = linePointToEllipse.X,
                 Y2 = linePointToEllipse.Y,
             };
@@ -121,14 +110,15 @@ namespace GraphDrawer
 
             var hookView = new Ellipse()
             {
+                DataContext = vm,
                 Width = HOOK_DIAMETER,
                 Height = HOOK_DIAMETER,
                 Stroke = Brushes.DarkRed, // FlowTypeToColor(flowType),
-                StrokeThickness = direction == 1 ? 0.0 : 2.0,
-                Fill = direction == 1 ? Brushes.DarkRed : Brushes.Gainsboro // FlowTypeToColor(flowType) : Brushes.Gainsboro,
+                StrokeThickness = vm.Direction == 1 ? 0.0 : 2.0,
+                Fill = vm.Direction == 1 ? Brushes.DarkRed : Brushes.Gainsboro // FlowTypeToColor(flowType) : Brushes.Gainsboro,
             };
-            SetLeft(hookView, linePointExternal.X - HOOK_RADIUS);
-            SetTop(hookView, linePointExternal.Y - HOOK_RADIUS);
+            SetLeft(hookView, vm.X - HOOK_RADIUS);
+            SetTop(hookView, vm.Y - HOOK_RADIUS);
 
             return (line, hookView);
         }

@@ -9,11 +9,11 @@ namespace GraphDrawer
 {
     public class EdgeViewModel : BaseViewModel
     {
-        public Point Start { get; init; }
+        public HookViewModel Start { get; init; }
 
-        public Point End { get; init; }
+        public HookViewModel End { get; init; }
 
-        public EdgeViewModel(Point start, Point end)
+        public EdgeViewModel(HookViewModel start, HookViewModel end)
         {
             (Start, End) = (start, end);
         }

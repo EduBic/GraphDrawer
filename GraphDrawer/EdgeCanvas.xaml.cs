@@ -27,15 +27,15 @@ namespace GraphDrawer
             InitializeComponent();
             DataContext = vm;
 
-            SetLeft(this, vm.Start.X);
-            SetTop(this, vm.Start.Y);
+            SetLeft(this, vm.Start.AbsX);
+            SetTop(this, vm.Start.AbsY);
 
             line = new Line()
             {
                 X1 = 0,
                 Y1 = 0,
-                X2 = vm.End.X - vm.Start.X,
-                Y2 = vm.End.Y - vm.Start.Y,
+                X2 = vm.End.AbsX - vm.Start.AbsX,
+                Y2 = vm.End.AbsY - vm.Start.AbsY,
                 Stroke = Brushes.Black,
                 StrokeThickness = 2,
             };

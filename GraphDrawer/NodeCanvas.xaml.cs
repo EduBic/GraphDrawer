@@ -20,26 +20,26 @@ namespace GraphDrawer
     /// </summary>
     public partial class NodeCanvas : Canvas
     {
-        private const double CIRCLE_RADIUS = 20;
-        private const double HOOK_RADIUS = 6;
-        private const double HOOK_DIAMETER = HOOK_RADIUS * 2;
-
-        private const double DIST_FROM_ELLIPSE_INP = 10.0;
-        private const double DIST_FROM_ELLIPSE_OUT = 12.0;
+        internal const double CIRCLE_RADIUS = 20;
+        internal const double HOOK_RADIUS = 6;
+        internal const double HOOK_DIAMETER = HOOK_RADIUS * 2;
+        internal const double DIST_FROM_ELLIPSE_INP = 10.0;
+        internal const double DIST_FROM_ELLIPSE_OUT = 12.0;
 
         public Ellipse Circle { get; }
 
-        public List<Ellipse> InpHooks { get; }
-        public List<Ellipse> OutHooks { get; }
+        public List<(Line, Ellipse)> InpHooks { get; }
+        public List<(Line, Ellipse)> OutHooks { get; }
 
 
-        public NodeCanvas(Point center, List<ConnectionViewModel> connections)
+        public NodeCanvas(NodeViewModel vm)
         {
             InitializeComponent();
+            DataContext = vm;
 
             // set global coordinates
-            SetLeft(this, center.X);
-            SetTop(this, center.Y);
+            SetLeft(this, vm.Origin.X);
+            SetTop(this, vm.Origin.Y);
 
             this.Width = CIRCLE_RADIUS * 4;
             this.Height = CIRCLE_RADIUS * 4;
@@ -61,39 +61,46 @@ namespace GraphDrawer
             Children.Add(Circle);
 
             // draw connection hooks
-            var inputs = connections.Select(conn => (conn.NumInput, conn.Type)).ToList();
-            var inputsCount = connections.Select(conn => conn.NumInput).Sum();
-            InpHooks = DrawHooks(inputs, inputsCount, -1);
+            var inputs = vm.Connections.SelectMany(conn => conn.Inputs).ToList();
+            InpHooks = DrawHooks(inputs, -1);
 
-            var outputs = connections.Select(conn => (conn.NumOutput, conn.Type)).ToList();
-            var outputsCount = connections.Select(conn => conn.NumOutput).Sum();
-            OutHooks = DrawHooks(outputs, outputsCount, 1);
+            foreach (var hook in InpHooks)
+            {
+                Children.Add(hook.Item1);
+                Children.Add(hook.Item2);
+            }
+
+            var outputs = vm.Connections.SelectMany(conn => conn.Outputs).ToList();
+            OutHooks = DrawHooks(outputs, 1);
+
+            foreach (var hook in OutHooks)
+            {
+                Children.Add(hook.Item1);
+                Children.Add(hook.Item2);
+            }
         }
 
         // direction = 1 => RIGHT, -1 => LEFT
-        private List<Ellipse> DrawHooks(List<(int, string)> hookTuples, int count, int direction)
+        private static List<(Line, Ellipse)> DrawHooks(List<HookViewModel> hooks, int direction)
         {
-            var res = new List<Ellipse>();
-            var distanceBtwHooks = CIRCLE_RADIUS * 2 / (1 + count);
+            var res = new List<(Line, Ellipse)>();
+            var distanceBtwHooks = CIRCLE_RADIUS * 2 / (1 + hooks.Count);
             int counter = 1;
-            foreach (var (num, type) in hookTuples)
+            foreach (var hookVm in hooks)
             {
                 var xHookCoord = direction * (CIRCLE_RADIUS + DIST_FROM_ELLIPSE_OUT);
 
-                for (int k = 0; k < num; k++)
-                {
-                    var yHookCoord = distanceBtwHooks * counter - CIRCLE_RADIUS;
-                    var hook = DrawHook(new Point(xHookCoord, yHookCoord), direction);
-                    res.Add(hook);
-                    counter++;
-                }
+                var yHookCoord = distanceBtwHooks * counter - CIRCLE_RADIUS;
+                var hook = DrawHook(new Point(xHookCoord, yHookCoord), direction);
+                res.Add(hook);
+                counter++;
             }
 
             return res;
         }
 
         // direction = 1 => RIGHT, -1 => LEFT
-        private Ellipse DrawHook(Point linePointExternal, int direction)
+        private static (Line, Ellipse) DrawHook(Point linePointExternal, int direction)
         {
             var origin = new Point(0, 0);
             var linePointToEllipse = new Point(
@@ -122,11 +129,8 @@ namespace GraphDrawer
             };
             SetLeft(hookView, linePointExternal.X - HOOK_RADIUS);
             SetTop(hookView, linePointExternal.Y - HOOK_RADIUS);
-            
-            Children.Add(hookView);
-            Children.Add(line);
 
-            return hookView;
+            return (line, hookView);
         }
 
         internal void Deselect()

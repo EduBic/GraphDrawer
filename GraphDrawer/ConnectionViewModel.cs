@@ -1,48 +1,17 @@
-﻿using System;
+﻿using System.Collections.Generic;
 
 namespace GraphDrawer
 {
-    public class ConnectionViewModel : BaseViewModel
+    public class ConnectionViewModel
     {
-        private int numInput;
-        private int numOutput;
-        private string type;
+        public List<HookViewModel> Inputs { get; }
+        public List<HookViewModel> Outputs { get; }
 
-        public int NumInput 
-        { 
-            get { return numInput; } 
-            set { SetProperty(ref numInput, value); }
-        }
-
-        public int NumOutput 
+        public ConnectionViewModel(List<HookViewModel> inputs, List<HookViewModel> outputs)
         {
-            get { return numOutput; }
-            set { SetProperty(ref numOutput, value); }
+            Inputs = inputs;
+            Outputs = outputs;
         }
 
-        public string Type 
-        {
-            get { return type; }
-            set { SetProperty(ref type, value); }
-        }
-
-        public void Reset()
-        {
-            NumInput = 0;
-            NumOutput = 0;
-            Type = "Water";
-        }
-
-        internal ConnectionViewModel Clone()
-        {
-            var res = new ConnectionViewModel
-            {
-                numInput = numInput,
-                numOutput = numOutput,
-                type = type
-            };
-
-            return res;
-        }
     }
 }

@@ -55,9 +55,10 @@ namespace GraphDrawer
             lastPoint = new Point();
         }
 
-        private void CreateNodeCanvas(List<ConnectionViewModel> connections)
+        private void CreateNodeCanvas(List<ConnectionConfigViewModel> connections)
         {
-            mainCanvas.Children.Add(new NodeCanvas(lastPoint, connections));
+            var nodeVm = new NodeViewModel(lastPoint, connections);
+            mainCanvas.Children.Add(new NodeCanvas(nodeVm));
             CleanCreationNodeListeners();
         }
 

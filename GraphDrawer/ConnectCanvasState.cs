@@ -42,7 +42,7 @@ namespace GraphDrawer
                     var node = child as NodeCanvas;
                     foreach (var hook in node.OutHooks)
                     {
-                        hook.MouseDown += OutHook_OnMouseDown;
+                        hook.Item2.MouseDown += OutHook_OnMouseDown;
                     }
                 }
             }
@@ -66,7 +66,7 @@ namespace GraphDrawer
                     var node = child as NodeCanvas;
                     foreach (var hook in node.OutHooks)
                     {
-                        hook.MouseDown -= OutHook_OnMouseDown;
+                        hook.Item2.MouseDown -= OutHook_OnMouseDown;
                     }
                 }
             }
@@ -82,7 +82,7 @@ namespace GraphDrawer
                     var node = child as NodeCanvas;
                     foreach (var hook in node.InpHooks)
                     {
-                        hook.MouseDown += InpHook_MouseDown;
+                        hook.Item2.MouseDown += InpHook_MouseDown;
                     }
                 }
             }
@@ -92,7 +92,8 @@ namespace GraphDrawer
         {
             var end = e.GetPosition(mainCanvas);
 
-            var edge = new EdgeCanvas(start, end);
+            var edgeVm = new EdgeViewModel(start, end);
+            var edge = new EdgeCanvas(edgeVm);
             mainCanvas.Children.Add(edge);
 
             DetachInputHooks();
@@ -108,7 +109,7 @@ namespace GraphDrawer
                     var node = child as NodeCanvas;
                     foreach (var hook in node.InpHooks)
                     {
-                        hook.MouseDown -= InpHook_MouseDown;
+                        hook.Item2.MouseDown -= InpHook_MouseDown;
                     }
                 }
             }

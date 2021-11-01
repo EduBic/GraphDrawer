@@ -21,7 +21,7 @@ namespace GraphDrawer
     public partial class NodeConfigWindow : Window
     {
         public event Action CancelClicked;
-        public event Action<List<ConnectionViewModel>> OkClicked;
+        public event Action<List<ConnectionConfigViewModel>> OkClicked;
 
         public List<string> Types { get; } = new List<string>()
         {
@@ -29,13 +29,13 @@ namespace GraphDrawer
         };
 
 
-        public ConnectionViewModel CurrConnection { get; set; }
-        public ObservableCollection<ConnectionViewModel> Connections { get; set; }
+        public ConnectionConfigViewModel CurrConnection { get; set; }
+        public ObservableCollection<ConnectionConfigViewModel> Connections { get; set; }
 
         public NodeConfigWindow()
         {
-            CurrConnection = new ConnectionViewModel();
-            Connections = new ObservableCollection<ConnectionViewModel>();
+            CurrConnection = new ConnectionConfigViewModel();
+            Connections = new ObservableCollection<ConnectionConfigViewModel>();
             InitializeComponent();
         }
 

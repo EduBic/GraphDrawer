@@ -22,19 +22,20 @@ namespace GraphDrawer
     {
         private readonly Line line;
 
-        public EdgeCanvas(Point from, Point to)
+        public EdgeCanvas(EdgeViewModel vm)
         {
             InitializeComponent();
+            DataContext = vm;
 
-            SetLeft(this, from.X);
-            SetTop(this, from.Y);
+            SetLeft(this, vm.Start.X);
+            SetTop(this, vm.Start.Y);
 
             line = new Line()
             {
                 X1 = 0,
                 Y1 = 0,
-                X2 = to.X - from.X,
-                Y2 = to.Y - from.Y,
+                X2 = vm.End.X - vm.Start.X,
+                Y2 = vm.End.Y - vm.Start.Y,
                 Stroke = Brushes.Black,
                 StrokeThickness = 2,
             };

@@ -64,6 +64,20 @@ namespace GraphDrawer
             }
         }
 
+        internal void Translate(double translateX, double translateY)
+        {
+            X += translateX;
+            Y += translateY;
+
+            foreach (var conn in Connections)
+            {
+                foreach (var hook in conn.Inputs.Concat(conn.Outputs))
+                {
+                    hook.Translate(translateX, translateY);
+                }
+            }
+        }
+
         public void ChangePosition(Point newOrigin)
         {
             var translateX = X - newOrigin.X;
@@ -76,7 +90,7 @@ namespace GraphDrawer
             {
                 foreach (var hook in conn.Inputs.Concat(conn.Outputs))
                 {
-                    hook.Translate(translateX, translateY);
+                    hook.Translate(-translateX, -translateY);
                 }
             }
         }

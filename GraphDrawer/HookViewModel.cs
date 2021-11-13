@@ -44,8 +44,8 @@ namespace GraphDrawer
 
         internal void Translate(double translateX, double translateY)
         {
-            AbsX -= translateX;
-            AbsY -= translateY;
+            AbsX += translateX;
+            AbsY += translateY;
         }
     }
 }
